@@ -19,8 +19,8 @@ To clone the repository and set up the environment:
 
 1. Clone repository:
 ```
-git clone
-cd
+git clone https://github.com/marinadunn/europa-chaos-ML.git
+cd europa-chaos-ML
 ```
 
 2. Set up a new Python virtual environment
