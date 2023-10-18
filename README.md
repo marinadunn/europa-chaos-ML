@@ -18,37 +18,37 @@ The chaos regions use the following corresponding RegMaps for their labels:
 To clone the repository and set up the environment:
 
 1. Clone repository:
-```
-git clone https://github.com/marinadunn/europa-chaos-ML.git
-cd europa-chaos-ML
-```
+  ```
+  git clone https://github.com/marinadunn/europa-chaos-ML.git
+  cd europa-chaos-ML
+  ```
 
 2. Set up a new Python virtual environment
-It is recommended to create a new Python environment before installing packages and running the pipeline. All necessary package dependencies can be found in the `deps` directory.
+  It is recommended to create a new Python environment before installing packages and running the pipeline. All necessary package dependencies can be found in the `deps` directory.
 
-If running on a machine with CUDA GPU capability, run the following commands in a terminal:
-```
-conda env create --name [envname]
-conda activate [envname]
-pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
-pip3 install -r deps/requirements.txt
-python3 -m ipykernel install --user --name [envname]
-```
+  If running on a machine with CUDA GPU capability, run the following commands in a terminal:
+  ```
+  conda env create --name [envname]
+  conda activate [envname]
+  pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+  pip3 install -r deps/requirements.txt
+  python3 -m ipykernel install --user --name [envname]
+  ```
 
-Otherwise, for a CPU-only device, run the following:
-```
-conda create --name [envname] python=3.10 gdal -c conda-forge
-conda activate [envname]
-conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 cpuonly -c pytorch
-pip3 install -r deps/requirements.txt
-python3 -m ipykernel install --user --name [envname]
-```
+  Otherwise, for a CPU-only device, run the following:
+  ```
+  conda create --name [envname] python=3.10 gdal -c conda-forge
+  conda activate [envname]
+  conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 cpuonly -c pytorch
+  pip3 install -r deps/requirements.txt
+  python3 -m ipykernel install --user --name [envname]
+  ```
 
 ## Code Authors
 - Marina Dunn (<mdunn014@ucr.edu>)
 - Ahmed Awadallah (<ahmed.d8k8@gmail.com>)
 
-Supervised by: Dr. Conor A. Nixon (conor.a.nixon@nasa.gov)
+Supervised by: Dr. Conor A. Nixon (<conor.a.nixon@nasa.gov>)
 
 ## References
 If you use this code, please cite our paper: (link TBD)
