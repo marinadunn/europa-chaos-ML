@@ -14,7 +14,7 @@ The chaos regions use the following corresponding RegMaps for their labels:
 - Chaos ff, gg: `17ESREGMAP01` (Trailing Hemisphere)
 
 ## Model
-The current model employs a [Mask R-CNN](https://arxiv.org/pdf/1703.06870.pdf) framework, with a [ResNet50](https://arxiv.org/abs/1512.03385) backbone, and uses pre-trained weights from the [Common Objects in COntext (COCO)](https://cocodataset.org/#home) dataset for transfer learning.
+Our current setup leverages a [Mask R-CNN](https://arxiv.org/pdf/1703.06870.pdf) model framework, with a [ResNet50](https://arxiv.org/abs/1512.03385) backbone, and uses pre-trained weights from the [Common Objects in COntext (COCO)](https://cocodataset.org/#home) dataset to perform transfer learning.
 
 ## Installation / Requirements
 To clone the repository and set up the environment:
@@ -47,11 +47,17 @@ pip3 install -r deps/requirements.txt
 python3 -m ipykernel install --user --name [envname]
 ```
 
-## Code Authors
-- Marina Dunn (<mdunn014@ucr.edu>)
+## Authors
+- **Marina M. Dunn (<marina.dunn@email.ucr.edu>)**
+- Alyssa C. Mills (<alyssa_mills1@baylor.edu>)
 - Ahmed Awadallah (<ahmed.d8k8@gmail.com>)
+- Ethan J. Duncan (<ejduncan@asu.edu>)
+- Douglas M. Trent (<douglas.m.trent@nasa.gov>)
+- Andrew Larsen (<drewlarsen27@gmail.com>)
+- John Santerre (<john.santerre@gmail.com>)
+- Conor A. Nixon (<conor.a.nixon@nasa.gov>)
 
 Supervised by: Dr. Conor A. Nixon (<conor.a.nixon@nasa.gov>)
 
 ## References
-If you use this code, please cite our paper: (link TBD)
+If you use this code, please cite our NeurIPS paper: (link TBD)
