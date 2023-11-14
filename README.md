@@ -57,7 +57,5 @@ python3 -m ipykernel install --user --name [envname]
 - John Santerre (<john.santerre@gmail.com>)
 - Conor A. Nixon (<conor.a.nixon@nasa.gov>)
 
-Supervised by: Dr. Conor A. Nixon (<conor.a.nixon@nasa.gov>)
-
 ## References
 If you use this code, please cite our NeurIPS paper: (link TBD)
