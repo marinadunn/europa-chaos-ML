@@ -1,3 +1,20 @@
+*.pth
+/chaos_data
+/chaos_data_plates
+/Chaos_H
+/old_data
+/processed_data
+/cv_output
+/data_stats
+/model_output
+/optuna_output
+/temp_output
+/paper_output
+/saved_optuna_output
+*.un~
+*~
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
