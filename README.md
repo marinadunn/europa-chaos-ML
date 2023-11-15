@@ -25,7 +25,7 @@ cd europa-chaos-ML
 
 2. Set up a new Python virtual environment
 
-It is recommended to create a new Python environment before installing packages and running the pipeline. All necessary package dependencies can be found in the `deps` directory.
+It is recommended to create a new Python environment before installing packages and running the pipeline. All necessary dependencies can be found in the `deps` directory.
 
 If running on a machine with CUDA GPU capability, run the following commands in a terminal:
 ```
