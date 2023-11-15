@@ -29,7 +29,7 @@ It is recommended to create a new Python environment before installing packages 
 
 If running on a machine with CUDA GPU capability, run the following commands in a terminal:
 ```
-conda env create --name [envname]
+conda create --name [envname]
 conda activate [envname]
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 pip3 install -r deps/requirements.txt
