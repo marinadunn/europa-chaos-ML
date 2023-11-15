@@ -17,8 +17,6 @@ The chaos regions use the following corresponding RegMaps for their labels:
 Our current setup leverages a [Mask R-CNN](https://arxiv.org/pdf/1703.06870.pdf) model framework, with a [ResNet50](https://arxiv.org/abs/1512.03385) backbone, and uses pre-trained weights from the [Common Objects in COntext (COCO)](https://cocodataset.org/#home) dataset to perform transfer learning.
 
 ## Installation / Requirements
-To clone the repository and set up the environment:
-
 1. Clone repository:
 ```
 git clone https://github.com/marinadunn/europa-chaos-ML.git
