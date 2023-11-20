@@ -1,4 +1,4 @@
-import src.utility.transforms as T
+import transforms as T
 import torchvision.transforms as PT
 
 def get_transform(train):

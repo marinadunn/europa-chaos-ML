@@ -5,11 +5,11 @@ import torch
 from torch import inf
 import torchvision.models.detection.mask_rcnn
 
-from src.utility.coco_utils import get_coco_api_from_dataset
-from src.utility.coco_eval import CocoEvaluator
-import src.utility.utils as utils
+from coco_utils import get_coco_api_from_dataset
+from coco_eval import CocoEvaluator
+import utils as utils
 
-import cv2 
+import cv2
 import numpy as np
 
 
@@ -95,7 +95,7 @@ def evaluate(model, data_loader, device):
         model_time = time.time() - model_time
 
         res = {target["image_id"].item(): output for target, output in zip(targets, outputs)}
-        #import pdb; pdb.set_trace()          
+        #import pdb; pdb.set_trace()
         #for idx,image in enumerate(images):
         #    image = np.array(image.to(cpu_device))
         #    img_save = np.zeros((image.shape[1], image.shape[2], 3))
@@ -106,7 +106,7 @@ def evaluate(model, data_loader, device):
         #            for loc in list(zip(*np.where(masky[0,:,:]))):
         #                img_save[loc[0],loc[1],0] += (img_save[loc[0],loc[1],0] + (res[idx]['scores'][idm]))
         #    cv2.imwrite(f'{idx}_visual.png', img_save)
-        #    print(idx)            
+        #    print(idx)
         evaluator_time = time.time()
         coco_evaluator.update(res)
         evaluator_time = time.time() - evaluator_time
