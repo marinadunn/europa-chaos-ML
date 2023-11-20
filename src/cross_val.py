@@ -1,21 +1,24 @@
+from config import (make_dir, clear_and_remake_directory,
+                    TRANSFER_TRAINED_MODEL_FOLDER,
+                    CV_OUTPUT_PATH,
+                    CHAOS_REGION_ALIAS_TO_FILE_MAP,
+                    CHAOS_REGION_ALIAS_TO_LABEL_MAP,
+                    CHAOS_REGION_ALIAS_TO_REGION_MAP
+                    )
+from model_objects.rcnn_model import MaskRCNN
+from model_objects.trainable_maskrcnn import TrainableMaskRCNN
+from utils.optuna_utility.evaluation import MaskRCNNCumulativeOutputEvaluator
+import utils.file_utils as file_utils
 
-from src.utility.file_system import make_dir, clear_and_remake_directory
-from src.model_objects.rcnn_model import MaskRCNN
-from src.info.model_info import TRANSFER_TRAINED_MODEL_FOLDER
 import cv2
-from src.info.nasa_data import CHAOS_REGION_ALIAS_TO_FILE_MAP, CHAOS_REGION_ALIAS_TO_LABEL_MAP, CHAOS_REGION_ALIAS_TO_REGION_MAP
-from src.info.file_structure import CV_OUTPUT_PATH
 import numpy as np
-from src.optuna_utility.evaluation import MaskRCNNCumulativeOutputEvaluator
-import src.utility.file_text_processing as ftp
-from src.model_objects.trainable_maskrcnn import TrainableMaskRCNN
 import matplotlib.pyplot as plt
 
 
 clear_and_remake_directory(CV_OUTPUT_PATH)
 csv_path = f"{CV_OUTPUT_PATH}/pixel_metrics.csv"
 header = f"chaos_region,crop_size,f1,precision,recall,best_threshold\n"
-ftp.create_output_csv(csv_path, header)
+file_utils.create_output_csv(csv_path, header)
 small_crop_size = 175
 stride = 64
 stride_eval = stride
@@ -80,7 +83,7 @@ def test_output(model_obj, region):
     f1 = eval_obj.calc_f1_score(prec, rec)
     # Save metrics
     obs = f"{region},{small_crop_size},{f1:.4f},{prec:.4f},{rec:.4f},{best_thresh:.10f}"
-    ftp.append_input_to_file(csv_path, obs)
+    file_utils.append_input_to_file(csv_path, obs)
     # Save Vis
     thresholded_pred = np.where(pred_logit_dist > best_thresh, 255, 0)
     save_vis_performance(base_crop.copy(), thresholded_pred, lbl_crop, region)

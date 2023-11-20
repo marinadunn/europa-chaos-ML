@@ -1,4 +1,4 @@
-from src.model_objects.trainable_maskrcnn import TrainableMaskRCNN
+from model_objects.trainable_maskrcnn import TrainableMaskRCNN
 
 def train_maskrcnn():
     train_obj = TrainableMaskRCNN(2, 2)

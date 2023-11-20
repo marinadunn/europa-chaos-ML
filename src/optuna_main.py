@@ -1,5 +1,5 @@
-from src.optuna_wrapper import OptunaWrapper
-from src.optuna_utility.objectives import objective, avg_f1_objective, avg_recall_objective
+from optuna_wrapper import OptunaWrapper
+from utils.optuna_utility.objectives import objective, avg_f1_objective, avg_recall_objective
 
 def optuna_search():
     optuna_obj = OptunaWrapper("recall", 10, avg_recall_objective)
