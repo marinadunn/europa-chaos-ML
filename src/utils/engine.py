@@ -7,13 +7,16 @@ import torchvision.models.detection.mask_rcnn
 
 from coco_utils import get_coco_api_from_dataset
 from coco_eval import CocoEvaluator
-import utils as utils
+import src.utils.utils as utils
+import src.config as config
 
 import cv2
 import numpy as np
 
 
-def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
+def train_one_epoch(model, optimizer,
+                    data_loader, device,
+                    epoch, print_freq):
     model.train()
     metric_logger = utils.MetricLogger(delimiter="  ")
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
@@ -34,11 +37,13 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
         losses = sum(loss for loss in loss_dict.values())
 
-        # reduce losses over all GPUs for logging purposes
-        loss_dict_reduced = utils.reduce_dict(loss_dict)
-        losses_reduced = sum(loss for loss in loss_dict_reduced.values())
-
-        loss_value = losses_reduced.item()
+        # reduce losses over all GPUs (if available) for logging purposes
+        if config.device == 'cuda':
+            loss_dict_reduced = utils.reduce_dict(loss_dict)
+            losses_reduced = sum(loss for loss in loss_dict_reduced.values())
+            loss_value = losses_reduced.item()
+        else:
+            loss_value = losses.item()
 
         if not math.isfinite(loss_value):
             print("Loss is {}, stopping training".format(loss_value))
@@ -52,7 +57,10 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         if lr_scheduler is not None:
             lr_scheduler.step()
 
-        metric_logger.update(loss=losses_reduced, **loss_dict_reduced)
+        if config.device == 'cuda':
+            metric_logger.update(loss=losses_reduced, **loss_dict_reduced)
+        else:
+            metric_logger.update(loss=losses, **loss_dict)
         metric_logger.update(lr=optimizer.param_groups[0]["lr"])
 
     return metric_logger
@@ -60,22 +68,23 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
 def _get_iou_types(model):
     model_without_ddp = model
+
     if isinstance(model, torch.nn.parallel.DistributedDataParallel):
         model_without_ddp = model.module
     iou_types = ["bbox"]
+
     if isinstance(model_without_ddp, torchvision.models.detection.MaskRCNN):
         iou_types.append("segm")
     if isinstance(model_without_ddp, torchvision.models.detection.KeypointRCNN):
         iou_types.append("keypoints")
+
     return iou_types
 
 
 @torch.no_grad()
 def evaluate(model, data_loader, device):
     n_threads = torch.get_num_threads()
-    # FIXME remove this and make paste_masks_in_image run on the GPU
     torch.set_num_threads(1)
-    cpu_device = torch.device("cpu")
     model.eval()
     metric_logger = utils.MetricLogger(delimiter="  ")
     header = 'Test:'
@@ -84,7 +93,8 @@ def evaluate(model, data_loader, device):
     iou_types = _get_iou_types(model)
     coco_evaluator = CocoEvaluator(coco, iou_types)
 
-    for images, targets in metric_logger.log_every(data_loader, 100, header): #Why 100??
+    # Change print_freq to smaller number to print more often
+    for images, targets in metric_logger.log_every(data_loader, 100, header):
         images = list(img.to(device) for img in images)
 
         torch.cuda.synchronize()
@@ -95,18 +105,7 @@ def evaluate(model, data_loader, device):
         model_time = time.time() - model_time
 
         res = {target["image_id"].item(): output for target, output in zip(targets, outputs)}
-        #import pdb; pdb.set_trace()
-        #for idx,image in enumerate(images):
-        #    image = np.array(image.to(cpu_device))
-        #    img_save = np.zeros((image.shape[1], image.shape[2], 3))
-        #    img_save[:,:,0] = image #fix this
-        #    img_save[:,:,1] = image
-        #    img_save[:,:,2] = image
-        #    for idm, masky in enumerate(res[idx]['masks']): # 1-100
-        #            for loc in list(zip(*np.where(masky[0,:,:]))):
-        #                img_save[loc[0],loc[1],0] += (img_save[loc[0],loc[1],0] + (res[idx]['scores'][idm]))
-        #    cv2.imwrite(f'{idx}_visual.png', img_save)
-        #    print(idx)
+
         evaluator_time = time.time()
         coco_evaluator.update(res)
         evaluator_time = time.time() - evaluator_time
@@ -117,8 +116,9 @@ def evaluate(model, data_loader, device):
     print("Averaged stats:", metric_logger)
     coco_evaluator.synchronize_between_processes()
 
-    # accumulate predictions from all images
+    # Accumulate predictions from all images
     coco_evaluator.accumulate()
     coco_evaluator.summarize()
     torch.set_num_threads(n_threads)
+
     return coco_evaluator
