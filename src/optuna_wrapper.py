@@ -1,7 +1,6 @@
 import optuna
-from src.utility.file_system import make_dir
-from src.info.file_structure import OPTUNA_OUTPUT_PATH
-from src.utility.file_text_processing import append_input_to_file, clear_file
+from utils.file_utils import make_dir, append_input_to_file, clear_file
+from config import OPTUNA_OUTPUT_PATH
 
 
 class OptunaWrapper():
