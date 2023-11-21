@@ -2,20 +2,29 @@ from collections import defaultdict, deque
 import datetime
 import pickle
 import time
+import errno
+import os
 
 import torch
 import torch.distributed as dist
 
-import errno
-import os
+import src.config as config
 
 
 class SmoothedValue(object):
-    """Track a series of values and provide access to smoothed values over a
+    """
+    Track a series of values and provide access to smoothed values over a
     window or the global series average.
     """
 
     def __init__(self, window_size=20, fmt=None):
+        """
+        Initialize SmoothedValue.
+
+        Args:
+            window_size (int): Size of the smoothing window.
+            fmt (str): Format string for printing.
+        """
         if fmt is None:
             fmt = "{median:.4f} ({global_avg:.4f})"
         self.deque = deque(maxlen=window_size)
@@ -24,17 +33,25 @@ class SmoothedValue(object):
         self.fmt = fmt
 
     def update(self, value, n=1):
+        """
+        Update the smoothed value with a new data point.
+
+        Args:
+            value: New data point.
+            n (int): Weight of the data point.
+        """
         self.deque.append(value)
         self.count += n
         self.total += value * n
 
     def synchronize_between_processes(self):
         """
+        Synchronize counts and totals between distributed processes.
         Warning: does not synchronize the deque!
         """
         if not is_dist_avail_and_initialized():
             return
-        t = torch.tensor([self.count, self.total], dtype=torch.float64, device='cuda')
+        t = torch.tensor([self.count, self.total], dtype=torch.float64, device=config.device)
         dist.barrier()
         dist.all_reduce(t)
         t = t.tolist()
@@ -43,38 +60,46 @@ class SmoothedValue(object):
 
     @property
     def median(self):
+        """Get the median of the smoothed values."""
         d = torch.tensor(list(self.deque))
         return d.median().item()
 
     @property
     def avg(self):
+        """Get the average of the smoothed values."""
         d = torch.tensor(list(self.deque), dtype=torch.float32)
         return d.mean().item()
 
     @property
     def global_avg(self):
+        """Get the global average of the smoothed values."""
         return self.total / self.count
 
     @property
     def max(self):
+        """Get the maximum of the smoothed values."""
         return max(self.deque)
 
     @property
     def value(self):
+        """Get the most recent smoothed value."""
         return self.deque[-1]
 
     def __str__(self):
+        """Format the smoothed values as a string."""
         return self.fmt.format(
             median=self.median,
             avg=self.avg,
             global_avg=self.global_avg,
             max=self.max,
-            value=self.value)
+            value=self.value
+        )
 
 
 def all_gather(data):
     """
-    Run all_gather on arbitrary picklable data (not necessarily tensors)
+    Run all_gather on arbitrary picklable data (not necessarily tensors).
+
     Args:
         data: any picklable object
     Returns:
@@ -84,45 +109,38 @@ def all_gather(data):
     if world_size == 1:
         return [data]
 
-    # serialized to a Tensor
+    # Serialized to a Tensor
     buffer = pickle.dumps(data)
     storage = torch.ByteStorage.from_buffer(buffer)
-    tensor = torch.ByteTensor(storage).to("cuda")
+    tensor = torch.ByteTensor(storage).to(config.device)
 
-    # obtain Tensor size of each rank
-    local_size = torch.tensor([tensor.numel()], device="cuda")
-    size_list = [torch.tensor([0], device="cuda") for _ in range(world_size)]
+    # Obtain Tensor size of each rank
+    local_size = torch.tensor([tensor.numel()], device=config.device)
+    size_list = [torch.tensor([0], device=config.device) for _ in range(world_size)]
     dist.all_gather(size_list, local_size)
     size_list = [int(size.item()) for size in size_list]
     max_size = max(size_list)
 
-    # receiving Tensor from all ranks
-    # we pad the tensor because torch all_gather does not support
-    # gathering tensors of different shapes
-    tensor_list = []
-    for _ in size_list:
-        tensor_list.append(torch.empty((max_size,), dtype=torch.uint8, device="cuda"))
+    # Receiving Tensor from all ranks
+    tensor_list = [torch.empty((max_size,), dtype=torch.uint8, device=config.device) for _ in size_list]
     if local_size != max_size:
-        padding = torch.empty(size=(max_size - local_size,), dtype=torch.uint8, device="cuda")
+        padding = torch.empty(size=(max_size - local_size,), dtype=torch.uint8, device=config.device)
         tensor = torch.cat((tensor, padding), dim=0)
     dist.all_gather(tensor_list, tensor)
 
-    data_list = []
-    for size, tensor in zip(size_list, tensor_list):
-        buffer = tensor.cpu().numpy().tobytes()[:size]
-        data_list.append(pickle.loads(buffer))
-
+    # Deserialize and gather data
+    data_list = [pickle.loads(tensor.cpu().numpy().tobytes()[:size]) for size, tensor in zip(size_list, tensor_list)]
     return data_list
-
 
 def reduce_dict(input_dict, average=True):
     """
-    Args:
-        input_dict (dict): all the values will be reduced
-        average (bool): whether to do average or sum
     Reduce the values in the dictionary from all processes so that all processes
     have the averaged results. Returns a dict with the same fields as
     input_dict, after reduction.
+
+    Args:
+        input_dict (dict): all the values will be reduced
+        average (bool): whether to do average or sum
     """
     world_size = get_world_size()
     if world_size < 2:
@@ -143,11 +161,19 @@ def reduce_dict(input_dict, average=True):
 
 
 class MetricLogger(object):
+    """Logger for tracking metrics."""
     def __init__(self, delimiter="\t"):
+        """
+        Initialize MetricLogger.
+
+        Args:
+            delimiter (str): Delimiter for formatting.
+        """
         self.meters = defaultdict(SmoothedValue)
         self.delimiter = delimiter
 
     def update(self, **kwargs):
+        """Update meters with new values."""
         for k, v in kwargs.items():
             if isinstance(v, torch.Tensor):
                 v = v.item()
@@ -155,29 +181,29 @@ class MetricLogger(object):
             self.meters[k].update(v)
 
     def __getattr__(self, attr):
+        """Get meter values."""
         if attr in self.meters:
             return self.meters[attr]
         if attr in self.__dict__:
             return self.__dict__[attr]
-        raise AttributeError("'{}' object has no attribute '{}'".format(
-            type(self).__name__, attr))
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{attr}'")
 
     def __str__(self):
-        loss_str = []
-        for name, meter in self.meters.items():
-            loss_str.append(
-                "{}: {}".format(name, str(meter))
-            )
+        """Format meters as a string."""
+        loss_str = [f"{name}: {str(meter)}" for name, meter in self.meters.items()]
         return self.delimiter.join(loss_str)
 
     def synchronize_between_processes(self):
+        """Synchronize meters between distributed processes."""
         for meter in self.meters.values():
             meter.synchronize_between_processes()
 
     def add_meter(self, name, meter):
+        """Add a new meter."""
         self.meters[name] = meter
 
     def log_every(self, iterable, print_freq, header=None):
+        """Log metrics at specified intervals during training."""
         i = 0
         if not header:
             header = ''
@@ -205,7 +231,9 @@ class MetricLogger(object):
                 'time: {time}',
                 'data: {data}'
             ])
+
         MB = 1024.0 * 1024.0
+
         for obj in iterable:
             data_time.update(time.time() - end)
             yield obj
@@ -233,11 +261,12 @@ class MetricLogger(object):
 
 
 def collate_fn(batch):
+    """Collate function for PyTorch DataLoader."""
     return tuple(zip(*batch))
 
 
 def warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor):
-
+    """Create a warmup learning rate scheduler."""
     def f(x):
         if x >= warmup_iters:
             return 1
@@ -248,6 +277,7 @@ def warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor):
 
 
 def mkdir(path):
+    """Create a directory if it does not exist."""
     try:
         os.makedirs(path)
     except OSError as e:
@@ -256,9 +286,7 @@ def mkdir(path):
 
 
 def setup_for_distributed(is_master):
-    """
-    This function disables printing when not in master process
-    """
+    """Disable printing when not in the master process."""
     import builtins as __builtin__
     builtin_print = __builtin__.print
 
@@ -271,6 +299,7 @@ def setup_for_distributed(is_master):
 
 
 def is_dist_avail_and_initialized():
+    """Check if distributed training is available and initialized."""
     if not dist.is_available():
         return False
     if not dist.is_initialized():
@@ -279,27 +308,32 @@ def is_dist_avail_and_initialized():
 
 
 def get_world_size():
+    """Get the total number of distributed processes."""
     if not is_dist_avail_and_initialized():
         return 1
     return dist.get_world_size()
 
 
 def get_rank():
+    """Get the rank of the current process."""
     if not is_dist_avail_and_initialized():
         return 0
     return dist.get_rank()
 
 
 def is_main_process():
+    """Check if the current process is the main process."""
     return get_rank() == 0
 
 
 def save_on_master(*args, **kwargs):
+    """Save a file only on the master process."""
     if is_main_process():
         torch.save(*args, **kwargs)
 
 
 def init_distributed_mode(args):
+    """Initialize distributed training mode."""
     if 'RANK' in os.environ and 'WORLD_SIZE' in os.environ:
         args.rank = int(os.environ["RANK"])
         args.world_size = int(os.environ['WORLD_SIZE'])
