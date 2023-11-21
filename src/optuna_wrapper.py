@@ -1,6 +1,6 @@
 import optuna
 from utils.file_utils import make_dir, append_input_to_file, clear_file
-from config import OPTUNA_OUTPUT_PATH
+from src.config import OPTUNA_OUTPUT_PATH
 
 
 class OptunaWrapper():
@@ -33,17 +33,21 @@ class OptunaWrapper():
             trial_count (int): Number of trials in the optimization.
             obj_fn (callable): Objective function for optimization.
         """
+        # Ensure optuna output directory exists
         make_dir(OPTUNA_OUTPUT_PATH)
         self.optim_metric = optim_metric
         self.study = None
         self.obj_fn = obj_fn
         self.trial_count = trial_count
+        self.sampler = optuna.samplers.TPESampler()  # uses Bayesian optimization
         self.optimized = False
 
+        # Create hyperparameter tuning "study" session
+        # Use "maximize" direction for metrics like accuracy, precision, or recall; "minimize" for loss
         if optim_metric in OptunaWrapper.MAXIMAL_METRICS:
-            self.study = optuna.create_study(direction="maximize")
+            self.study = optuna.create_study(direction="maximize", sampler=self.sampler)
         elif optim_metric in OptunaWrapper.MINIMAL_METRICS:
-            self.study = optuna.create_study(direction="minimize")
+            self.study = optuna.create_study(direction="minimize", sampler=self.sampler)
         else:
             print("OptunaWrapper does not support this metric yet. Consider a different approach.")
 
@@ -55,6 +59,16 @@ class OptunaWrapper():
     def get_best_trial(self):
         """Return the best trial."""
         return self.study.best_trial
+
+    def get_stats(self):
+        """Print statistics about the optimization process."""
+        pruned_trials = [t for t in self.study.trials if t.state == optuna.trial.TrialState.PRUNED]
+        complete_trials = [t for t in self.study.trials if t.state == optuna.trial.TrialState.COMPLETE]
+
+        print("Study statistics: ")
+        print(" Number of finished trials: ", len(self.study.trials))
+        print(" Number of pruned trials: ", len(pruned_trials))
+        print(" Number of complete trials: ", len(complete_trials), "\n")
 
     def get_best_params(self):
         """Return the best parameters."""
@@ -85,3 +99,30 @@ class OptunaWrapper():
         for key, value in best_params.items():
             param_info = f"{key}: {value}"
             append_input_to_file(save_file_path, param_info)
+
+    def plot_search(self):
+        """Plot the optimization process."""
+        if self.optimized:
+            # Plot intermediate values of all trials in a study
+            plot_intermediate_values(self.study)
+            plt.tight_layout()
+            plt.savefig(f"{OPTUNA_OUTPUT_PATH}/intermediate_values.png",
+                        bbox_inches='tight', dpi=300)
+
+            # Plot optimization history of all trials in a study
+            plot_optimization_history(self.study)
+            plt.tight_layout()
+            plt.savefig(f"{OPTUNA_OUTPUT_PATH}/optimization_history.png",
+                        bbox_inches='tight', dpi=300)
+
+            # Plot the high-dimensional parameter relationships in a study
+            plot_parallel_coordinate(self.study)
+            plt.tight_layout()
+            plt.savefig(f"{OPTUNA_OUTPUT_PATH}/parallel_coordinate.png",
+                        bbox_inches='tight', dpi=300)
+
+            # Plot hyperparameter importances
+            plot_param_importances(self.study)
+            plt.tight_layout()
+            plt.savefig(f"{OPTUNA_OUTPUT_PATH}/param_importances.png",
+                        bbox_inches='tight', dpi=300)
