@@ -16,7 +16,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         Initialize the TrainableMaskRCNN.
 
         Args:
-            arch_id (int): Identifier for the model architecture.
+            arch_id (int): Identifier for the model architecture version.
             num_classes (int): Number of output classes.
         """
         super().__init__()
