@@ -41,15 +41,18 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
             stride (int): Stride for sliding window.
             crop_size (int): Size of the cropped images.
         """
-        self.load_and_set_model(self.arch_id, self.num_classes,
-                                trainable_layers=3, type="v2", dropout_factor=0.2)
+        self.load_and_set_model(self.arch_id,
+                                self.num_classes,
+                                trainable_layers=3,
+                                type="v2",
+                                dropout_factor=0.2
+                                )
 
 
         data_gen_params = {
             "train_regions": train_regions,
             "test_regions": test_regions,
-            "crop_height": crop_size,
-            "crop_width": crop_size,
+            "crop_size": crop_size,
             "stride": stride,
             "min_sheet_area": 200
         }
@@ -57,8 +60,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         self.data_gen.pruned_sliding_crops_experiment(
             data_gen_params["train_regions"],
             data_gen_params["test_regions"],
-            data_gen_params["crop_height"],
-            data_gen_params["crop_width"],
+            data_gen_params["crop_size"],
             data_gen_params["stride"],
             data_gen_params["min_sheet_area"]
         )
@@ -66,8 +68,10 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         dataset = EuropaIceBlockDataset('./', IMG_TRAIN_PATH, LBL_TRAIN_PATH,
                                         get_transform(train=True))
         # default batch size is 1
-        data_loader = torch.utils.data.DataLoader(dataset, shuffle=False,
-                                                  collate_fn=utils.collate_fn)
+        data_loader = torch.utils.data.DataLoader(dataset,
+                                                  shuffle=False,
+                                                  collate_fn=utils.collate_fn
+                                                  )
 
         params = [p for p in self.model.parameters() if p.requires_grad]
         learning_rate = 0.001
@@ -75,7 +79,6 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
 
         for epoch in range(num_epochs):
             train_one_epoch(self.model, optimizer, data_loader, self.device, epoch, print_freq=100)
-
 
     # Mimics the structure of objective with the exact values suggested by optuna
     def train_model(self, num_epochs):
@@ -85,8 +88,8 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         Args:
             num_epochs (int): Number of training epochs.
         """
-        sself.load_and_set_model(self.arch_id, self.num_classes,
-                                 trainable_layers=3, type="v2", dropout_factor=0.2)
+        self.load_and_set_model(self.arch_id, self.num_classes, trainable_layers=3,
+                                type="v2", dropout_factor=0.2)
 
         crop_size = 384
         stride = 16
@@ -94,8 +97,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         data_gen_params = {
             "train_regions": ["A", "B", "C", "Co", "D", "F", "G", "H", "I"],
             "test_regions": ["hh", "ii"],
-            "crop_height": crop_size,
-            "crop_width": crop_size,
+            "crop_size": crop_size,
             "stride": stride,
             "min_sheet_area": 200
         }
@@ -103,14 +105,17 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         self.data_gen.pruned_sliding_crops_experiment(
             data_gen_params["train_regions"],
             data_gen_params["test_regions"],
-            data_gen_params["crop_height"],
-            data_gen_params["crop_width"],
+            data_gen_params["crop_size"],
             data_gen_params["stride"],
             data_gen_params["min_sheet_area"]
         )
 
         dataset = EuropaIceBlockDataset('./', IMG_TRAIN_PATH, LBL_TRAIN_PATH, get_transform(train=True))
-        data_loader = torch.utils.data.DataLoader(dataset, batch_size=2, shuffle=False, collate_fn=utils.collate_fn)
+        data_loader = torch.utils.data.DataLoader(dataset,
+                                                  batch_size=2,
+                                                  shuffle=False,
+                                                  collate_fn=utils.collate_fn
+                                                  )
 
         params = [p for p in self.model.parameters() if p.requires_grad]
         learning_rate = 0.001
@@ -118,7 +123,6 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
 
         for epoch in range(num_epochs):
             train_one_epoch(self.model, optimizer, data_loader, self.device, epoch, print_freq=100)
-
 
     def save_model(self):
         """
