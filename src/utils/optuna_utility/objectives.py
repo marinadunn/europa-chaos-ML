@@ -130,7 +130,7 @@ def objective(trial):
     true_segms, pred_segms = mask_model.calc_cumulative_threshold_matrix(data_loader_test)
     iou_score = evaluator.calc_cumulative_threshold_iou(true_segms, pred_segms)
 
-    return iou_score
+    return iou_score  # Return the metric to be optimized
 
 
 def avg_f1_objective(trial):
@@ -210,7 +210,7 @@ def avg_f1_objective(trial):
     if len(dataset_avg_f1_scores) != 0:
         dataset_avg_f1 = sum(dataset_avg_f1_scores) / len(dataset_avg_f1_scores)
 
-    return dataset_avg_f1
+    return dataset_avg_f1  # Return the metric to be optimized
 
 
 def avg_recall_objective(trial):
@@ -289,4 +289,4 @@ def avg_recall_objective(trial):
     if len(dataset_avg_recall_scores) != 0:
         dataset_avg_recall = sum(dataset_avg_recall_scores) / len(dataset_avg_recall_scores)
 
-    return dataset_avg_recall
+    return dataset_avg_recall  # Return the metric to be optimized
