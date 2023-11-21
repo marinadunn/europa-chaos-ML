@@ -1,4 +1,6 @@
 import torch
+import torchvision
+import numpy as np
 
 # set computation device
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
@@ -150,3 +152,11 @@ CHAOS_REGION_RESOLUTION_MAP = {
     "jj": 210.0,
     "kk": 210.0
 }
+
+# Fixing global random seed for reproducibility
+random_seed = 42
+np.random.seed(random_seed)
+torch.manual_seed(random_seed)
+torch.cuda.manual_seed(random_seed)
+torch.cuda.manual_seed_all(random_seed)
+random.seed(random_seed)
