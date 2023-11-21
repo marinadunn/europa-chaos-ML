@@ -1,9 +1,7 @@
 import random
-import torch
-
 import numpy as np
 import cv2
-
+import torch
 from torchvision.transforms import functional as F
 
 
@@ -53,21 +51,19 @@ class RandomVerticalFlip(object): # Verify if correct
     def __call__(self, image, target):
         if random.random() < self.prob:
             height, width = image.shape[-2:]
-            # np_save = image.squeeze().cpu().numpy()*255
-            # cv2.imwrite("temp_preflip.png", np_save.astype(np.uint8))
             image = image.flip(1)
-            # np_save = image.squeeze().cpu().numpy()*255
-            # cv2.imwrite("temp_flip.png", np_save.astype(np.uint8))
-            # import pdb; pdb.set_trace()
             bbox = target["boxes"]
             bbox[:, [1, 3]] = height - bbox[:, [3, 1]]
             target["boxes"] = bbox
+
             if "masks" in target:
                 target["masks"] = target["masks"].flip(0)
+
             if "keypoints" in target:
                 keypoints = target["keypoints"]
                 keypoints = _flip_coco_person_keypoints(keypoints, height)
                 target["keypoints"] = keypoints
+
         return image, target
 
 class RandomBrightnessAdjustment(object):
@@ -79,6 +75,7 @@ class RandomBrightnessAdjustment(object):
             brightness_factor = random.uniform(0.2, 1.5)
             image = image*brightness_factor
             torch.minimum(image, torch.tensor(255.0))
+
         return image, target
 
 
