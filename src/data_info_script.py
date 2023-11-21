@@ -6,7 +6,7 @@ from config import (CHAOS_REGION_ALIAS_TO_FILE_MAP,
                     CHAOS_REGION_RESOLUTION_MAP,
                     INFO_OUTPUT_PATH
                     )
-import utils.file_utils as file_utils
+from utils.file_utils import create_output_csv, append_input_to_file
 
 # Avg plate size km
 # std plate size km
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     """Main function to calculate and write plate metrics for different regions."""
     data_path = f"{INFO_OUTPUT_PATH}/pixel_metrics.txt"
     header = f"Region & Plate Count & Chaos Area & Plate Area & Plate Area Mean & Plate Area Std & Plate Coverage\n"
-    file_utils.create_output_csv(data_path, header)
+    create_output_csv(data_path, header)
 
     print("Starting...")
 
@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     for region_alias in region_aliases:
         obs = calculate_metrics(region_alias)
-        file_utils.append_input_to_file(data_path, obs)
+        append_input_to_file(data_path, obs)
 
 if __name__ == "__main__":
     main()
