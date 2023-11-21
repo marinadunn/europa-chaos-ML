@@ -14,7 +14,7 @@ from src.config import (CHAOS_REGION_ALIAS_TO_FILE_MAP,
                         MODEL_OUTPUT_PATH,
                         device)
 from src.data_generator import DataGenerator
-from src.optuna_utility.evaluation import MaskRCNNOutputEvaluator
+from src.utils.optuna_utility.evaluation import MaskRCNNOutputEvaluator
 from src.model_objects.abstract_maskrcnn import AbstractMaskRCNN
 from src.utils.file_utils import (make_dir, clear_and_remake_directory,
                                   create_output_csv, append_input_to_file)
