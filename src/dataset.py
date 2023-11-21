@@ -39,18 +39,34 @@ class EuropaIceBlockDataset(torch.utils.data.Dataset):
         return [file for file in files if file.endswith(".npy")]
 
     def get_crop_metadata(self, file, img_shape):
+        """
+        Extracts crop metadata from the given file name and image shape.
+
+        Parameters:
+        - file (str): The name of the file containing crop information.
+        - img_shape (tuple): The shape of the original image in the format (height, width).
+
+        Returns:
+        tuple: A tuple containing region alias and a tuple representing the crop coordinates (y_min, x_min, y_max, x_max).
+        """
+        # Extracting region alias and coordinates from the file name
         file_name = os.path.splitext(file)[0]
         split_file = file_name.split('_')
         region_alias = split_file[0]
         x = int(split_file[1])
         y = int(split_file[2])
+
+        # Extracting image dimensions
         h = img_shape[0]
         w = img_shape[1]
-        y_min = int(split_file[2])
+
+        # Calculating crop coordinates
+        y_min = y
         y_max = y_min + h
-        x_min = int(split_file[1])
+        x_min = x
         x_max = x_min + w
-        return (region_alias, (y_min, x_min, y_max, x_max))
+
+        return region_alias, (y_min, x_min, y_max, x_max)
 
     def __getitem__(self, idx):
         """
