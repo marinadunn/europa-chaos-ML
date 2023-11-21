@@ -2,19 +2,17 @@ from torch import inf
 
 import json
 import tempfile
-
 import numpy as np
 import copy
 import time
 import torch
+from collections import defaultdict
 
 from pycocotools.cocoeval import COCOeval
 from pycocotools.coco import COCO
 import pycocotools.mask as mask_util
 
-from collections import defaultdict
-
-import utils as utils
+import src.utils.utils as utils
 
 
 class CocoEvaluator(object):
