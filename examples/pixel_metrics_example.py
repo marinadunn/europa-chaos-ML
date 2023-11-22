@@ -1,10 +1,10 @@
 from src.model_objects.rcnn_model import MaskRCNN
 from src.config import (TRANSFER_TRAINED_MODEL_FOLDER,
-                    CHAOS_REGION_ALIAS_TO_FILE_MAP,
-                    CHAOS_REGION_ALIAS_TO_LABEL_MAP,
-                    CHAOS_REGION_ALIAS_TO_REGION_MAP,
-                    MODEL_OUTPUT_PATH
-                    )
+                        CHAOS_REGION_ALIAS_TO_FILE_MAP,
+                        CHAOS_REGION_ALIAS_TO_LABEL_MAP,
+                        CHAOS_REGION_ALIAS_TO_REGION_MAP,
+                        MODEL_OUTPUT_PATH
+                        )
 import cv2
 import numpy as np
 from src.utils.optuna_utility.evaluation import MaskRCNNCumulativeOutputEvaluator
@@ -47,8 +47,7 @@ def pixel_csv():
         region_crop = np.where(region_crop > 0, 1, 0)
 
         # Get model output
-        pred_logit_dist = model_obj.get_rescaled_chaos_region_logit_scan(region,
-                                                                         crop_size=small_crop_size)
+        pred_logit_dist = model_obj.get_rescaled_chaos_region_logit_scan(region, crop_size=small_crop_size)
         pred_logit_dist = pred_logit_dist[y_min:y_max, x_min:x_max]
 
         # Remove out of region preds
@@ -90,8 +89,7 @@ def utilize_trained_maskrcnn():
     min_iou = 0.5
 
     # Get predictions
-    model_obj.get_rescaled_chaos_region_logit_scan("Co", small_crop_size,
-                                                   file_name=f"Co_{small_crop_size}_logit_scan")
+    model_obj.get_rescaled_chaos_region_logit_scan("Co", small_crop_size, file_name=f"Co_{small_crop_size}_logit_scan")
 
 
 if __name__ == "__main__":
