@@ -25,8 +25,7 @@ LBL_TEST_PATH = "../data/processed_data/lbl_test"
 
 CV_OUTPUT_PATH = "../output/cv_output"
 INFO_OUTPUT_PATH = "../output/data_stats"
-
-OPTUNA_OUTPUT_PATH = "../optuna_output"
+OPTUNA_OUTPUT_PATH = "../output/optuna_output"
 
 MODEL_WEIGHTS_PATH = "../models/model_weights"
 MODEL_OUTPUT_PATH = "../models"
