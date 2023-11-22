@@ -46,5 +46,5 @@ termcolor==2.3.0
 tornado==6.3.3
 tqdm==4.66.1
 typing_extensions==4.7.1
-urllib3==1.26.16
+urllib3==1.26.18
 widgetsnbextension==4.0.8
