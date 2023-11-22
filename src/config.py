@@ -1,6 +1,7 @@
 import torch
 import torchvision
 import numpy as np
+import random
 
 # set computation device
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
