@@ -328,6 +328,18 @@ class DataGenerator():
 
                     ct += 1  # Move to next image
 
+    def get_directories(self, set_type):
+        """
+        Get the directories for the specified set type.
+
+        Args:
+            set_type (str): Type of set (train/test).
+        """
+        if set_type == "train":
+            return self.train_img_path, self.train_lbl_path
+        elif set_type == "test":
+            return self.test_img_path, self.test_lbl_path
+
     def load_images(self, region_alias):
         """
         Load images and labels for the specified region.
@@ -338,6 +350,7 @@ class DataGenerator():
         # Load images and labels
         img = np.array(Image.open(CHAOS_REGION_ALIAS_TO_FILE_MAP[region_alias]))[:, :, 0]
         lbl = np.array(Image.open(CHAOS_REGION_ALIAS_TO_LABEL_MAP[region_alias]))[:, :, :3]
+        print("Images and labels loaded.")
 
         # Get extent of region
         region_lbl = np.array(Image.open(CHAOS_REGION_ALIAS_TO_REGION_MAP[region_alias]))
@@ -349,7 +362,6 @@ class DataGenerator():
 
         return img, lbl, region_crop
 
-    @staticmethod
     def process_labels(lbl_crop, min_sheet_area):
         """
         Process the labels by pruning small areas and broken labels.
@@ -423,7 +435,6 @@ class DataGenerator():
         # Save image
         cv2.imwrite(f'{lbl_dir}/{region_alias}_{x}_{y}_{ct}_visual.png', img_png)
 
-    @staticmethod
     def crop_images(img, lbl, x, y, crop_size):
         """
         Crop the given image and label.
@@ -472,14 +483,3 @@ class DataGenerator():
         else:
             return False
 
-    def get_directories(self, set_type):
-        """
-        Get the directories for the specified set type.
-
-        Args:
-            set_type (str): Type of set (train/test).
-        """
-        if set_type == "train":
-            return self.train_img_path, self.train_lbl_path
-        elif set_type == "test":
-            return self.test_img_path, self.test_lbl_path
