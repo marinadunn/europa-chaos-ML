@@ -4,14 +4,13 @@ import time
 import torch
 from torch import inf
 import torchvision.models.detection.mask_rcnn
+import cv2
+import numpy as np
 
 from coco_utils import get_coco_api_from_dataset
 from coco_eval import CocoEvaluator
 import src.utils.utils as utils
 import src.config as config
-
-import cv2
-import numpy as np
 
 
 def train_one_epoch(model, optimizer,
