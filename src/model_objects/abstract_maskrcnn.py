@@ -5,7 +5,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 from torchvision.models.detection import maskrcnn_resnet50_fpn
 
-import src.config as config
+import config as config
 
 class AbstractMaskRCNN():
     """

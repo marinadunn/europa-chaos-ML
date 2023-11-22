@@ -7,9 +7,9 @@ from src.config import (IMG_TEST_PATH, IMG_TRAIN_PATH,
                         LBL_TEST_PATH, LBL_TRAIN_PATH,
                         TRANSFER_TRAINED_MODEL_FOLDER
                         )
-from src.utils.custom import get_transform
-import src.utils.utils as utils
-from src.utils.engine import train_one_epoch
+from utils.custom import get_transform
+import utils.utils as utils
+from utils.engine import train_one_epoch
 
 class TrainableMaskRCNN(AbstractMaskRCNN):
     def __init__(self, arch_id, num_classes):

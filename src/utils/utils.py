@@ -4,11 +4,10 @@ import pickle
 import time
 import errno
 import os
-
 import torch
 import torch.distributed as dist
 
-import src.config as config
+import config as config
 
 
 class SmoothedValue(object):

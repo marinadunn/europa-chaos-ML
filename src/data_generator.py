@@ -3,13 +3,13 @@ import numpy as np
 from PIL import Image
 import cv2
 from utils.file_utils import clear_and_remake_directory
-from src.config import (IMG_TEST_PATH, IMG_TRAIN_PATH,
-                        LBL_TEST_PATH, LBL_TRAIN_PATH,
-                        PROCESSED_DATA_PATH,
-                        CHAOS_REGION_ALIAS_TO_FILE_MAP,
-                        CHAOS_REGION_ALIAS_TO_LABEL_MAP,
-                        CHAOS_REGION_ALIAS_TO_REGION_MAP
-                        )
+from config import (IMG_TEST_PATH, IMG_TRAIN_PATH,
+                    LBL_TEST_PATH, LBL_TRAIN_PATH,
+                    PROCESSED_DATA_PATH,
+                    CHAOS_REGION_ALIAS_TO_FILE_MAP,
+                    CHAOS_REGION_ALIAS_TO_LABEL_MAP,
+                    CHAOS_REGION_ALIAS_TO_REGION_MAP
+                    )
 
 
 class DataGenerator():
