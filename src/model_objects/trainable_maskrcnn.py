@@ -1,4 +1,5 @@
 import torch
+
 from src.data_generator import DataGenerator
 from src.model_objects.abstract_maskrcnn import AbstractMaskRCNN
 from src.dataset import EuropaIceBlockDataset
