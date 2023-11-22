@@ -39,7 +39,6 @@ class OptunaWrapper():
         self.optim_metric = optim_metric
         self.trial_count = trial_count
         self.obj_fn = obj_fn
-        self.sampler = optuna.samplers.TPESampler()  # uses Bayesian optimization
         self.optimized = False
         self.study = None
 
@@ -49,10 +48,10 @@ class OptunaWrapper():
         # Create hyperparameter tuning "study" session
         # Use "maximize" direction for metrics like accuracy, precision, or recall
         if optim_metric in OptunaWrapper.MAXIMAL_METRICS:
-            self.study = optuna.create_study(direction="maximize", sampler=self.sampler)
+            self.study = optuna.create_study(direction="maximize")
         # Use "minimize" direction for metrics like loss
         elif optim_metric in OptunaWrapper.MINIMAL_METRICS:
-            self.study = optuna.create_study(direction="minimize", sampler=self.sampler)
+            self.study = optuna.create_study(direction="minimize")
         else:
             print("OptunaWrapper does not support this metric yet. Consider a different approach.")
 
@@ -64,16 +63,6 @@ class OptunaWrapper():
     def get_best_trial(self):
         """Return the best trial."""
         return self.study.best_trial
-
-    def get_stats(self):
-        """Print statistics about the optimization process."""
-        pruned_trials = [t for t in self.study.trials if t.state == optuna.trial.TrialState.PRUNED]
-        complete_trials = [t for t in self.study.trials if t.state == optuna.trial.TrialState.COMPLETE]
-
-        print("Study statistics: ")
-        print(" Number of finished trials: ", len(self.study.trials))
-        print(" Number of pruned trials: ", len(pruned_trials))
-        print(" Number of complete trials: ", len(complete_trials), "\n")
 
     def get_best_params(self):
         """Return the best parameters."""

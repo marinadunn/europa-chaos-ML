@@ -13,9 +13,7 @@ import utils.utils as utils
 import config as config
 
 
-def train_one_epoch(model, optimizer,
-                    data_loader, device,
-                    epoch, print_freq):
+def train_one_epoch(model, optimizer, data_loader, epoch, print_freq, device=config.device):
     model.train()
     metric_logger = utils.MetricLogger(delimiter="  ")
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
@@ -33,11 +31,10 @@ def train_one_epoch(model, optimizer,
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
         loss_dict = model(images, targets)
-
         losses = sum(loss for loss in loss_dict.values())
 
         # reduce losses over all GPUs (if available) for logging purposes
-        if config.device == 'cuda':
+        if device == 'cuda':
             loss_dict_reduced = utils.reduce_dict(loss_dict)
             losses_reduced = sum(loss for loss in loss_dict_reduced.values())
             loss_value = losses_reduced.item()
@@ -56,7 +53,7 @@ def train_one_epoch(model, optimizer,
         if lr_scheduler is not None:
             lr_scheduler.step()
 
-        if config.device == 'cuda':
+        if device == 'cuda':
             metric_logger.update(loss=losses_reduced, **loss_dict_reduced)
         else:
             metric_logger.update(loss=losses, **loss_dict)
