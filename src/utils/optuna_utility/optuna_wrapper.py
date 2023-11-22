@@ -1,6 +1,7 @@
 import optuna
-from src.utils.file_utils import make_dir, append_input_to_file, clear_file
-from src.config import OPTUNA_OUTPUT_PATH
+import sys
+from utils.file_utils import make_dir, append_input_to_file, clear_file
+from config import OPTUNA_OUTPUT_PATH
 
 
 class OptunaWrapper():
@@ -36,11 +37,11 @@ class OptunaWrapper():
         # Ensure optuna output directory exists
         make_dir(OPTUNA_OUTPUT_PATH)
         self.optim_metric = optim_metric
-        self.study = None
-        self.obj_fn = obj_fn
         self.trial_count = trial_count
+        self.obj_fn = obj_fn
         self.sampler = optuna.samplers.TPESampler()  # uses Bayesian optimization
         self.optimized = False
+        self.study = None
 
         # Can also use a pruner for early stopping
         # self.pruner = optuna.pruners.HyperbandPruner(reduction_factor=4)
