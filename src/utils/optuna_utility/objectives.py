@@ -207,7 +207,7 @@ def avg_f1_objective(trial):
     for thresh_sweep_pair in thresh_sweeps:
         thresh_sweep = thresh_sweep_pair[0]
         true_label = thresh_sweep_pair[1]
-        avg_f1,_ = evaluator.calc_min_iou_avg_f1(true_label, thresh_sweep, min_iou=0.3)
+        avg_f1, f1_scores = evaluator.calc_min_iou_avg_f1(true_label, thresh_sweep, min_iou=0.3)
         dataset_avg_f1_scores.append(avg_f1)
 
     dataset_avg_f1 = 0
