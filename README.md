@@ -13,10 +13,54 @@ The chaos regions use the following corresponding RegMaps for their labels:
 - Chaos ee, hh, ii, jj, kk: `17ESNERTRM01` (Trailing Hemisphere)
 - Chaos ff, gg: `17ESREGMAP01` (Trailing Hemisphere)
 
+The data for each chaos region can be found in the `data` directory. Smaller image and mask tiles generated as part of the hyperparameter search process are stored in a new directory `processed_data`, and are sorted into training and testing subsets (`img_train`, `img_test`, `lbl_train`, `lbl_test`).
+
 ## Model
 Our current setup leverages a [Mask R-CNN](https://arxiv.org/pdf/1703.06870.pdf) model framework, with a [ResNet50](https://arxiv.org/abs/1512.03385) backbone, and uses pre-trained weights from the [Common Objects in COntext (COCO)](https://cocodataset.org/#home) dataset to perform transfer learning.
 
+Final trained models and their weights can be found in the `models` directory.
+
+## Source Code
+All source code can be found in the `src` directory.
+
+## Examples
+The directory `examples` includes the following:
+- `reproject.py`: example script for reprojecting RegMap GeoTIFF images to the same CRS as the chaos GeoJSON files
+- `pixel_metrics_example`: example script for making predictions and calculating pixel-level metrics for an image.
+- `maskfromcoco.ipynb`: example notebook for how to create segmentation masks from COCO-formatted labels.
+
+## Tests
+All test code and resulting plots can be found in the `tests` directory.
+
+## Hyperparameter Tuning
+A hyperparameter search is conducted using the [`Optuna`](https://optuna.org) framework, and can be found in `src/optuna_main.py`. The search aims to maximize the segmentation IoU score across images in a dataset during optimization. A Tree-structured Parzen Estimator (TPE), a form of Bayesian Optimization, is used as the sampler in order to perform a more efficient search. The outputs of the search are located in the directory `output/optuna_outputs`.
+
 ## Installation / Requirements
+
+Current branch: `main`
+
+Project Repository Structure:
+```
+europa-chaos-ML/
+├── data
+│   ├── Chaos_[X]/
+│       ├── image/
+│       ├── label/
+│       ├── geojson/
+│   ├── processed_data/
+│   ├── size_distributions/
+├── deps/
+├── examples/
+├── models/
+│   ├── model_weights/
+├── plots/
+├── src/
+│   ├── model_objects/
+│   ├── utils/
+├── tests/
+├── README.md
+```
+
 1. Clone repository:
 ```
 git clone https://github.com/marinadunn/europa-chaos-ML.git
@@ -44,6 +88,8 @@ conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 cpuonly -c 
 pip3 install -r deps/requirements.txt
 python3 -m ipykernel install --user --name [envname]
 ```
+
+3. Optional: Tune Hyperparameters
 
 ## Authors
 - **Marina M. Dunn (<marina.dunn@email.ucr.edu>)**
