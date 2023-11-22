@@ -15,6 +15,9 @@ from src.utils.optuna_utility.evaluation import MaskRCNNOutputEvaluator
 # Create data generator
 data_gen = DataGenerator()
 
+# Define number of classes
+num_classes = 2
+
 def get_data_loaders(train_transform,
                      test_transform,
                      batch_size,
@@ -38,9 +41,11 @@ def get_data_loaders(train_transform,
     Returns:
         tuple: DataLoader instances for training and testing.
     """
+    # Define datasets
     dataset = EuropaIceBlockDataset('../', img_train_path, lbl_train_path, train_transform)
     dataset_test = EuropaIceBlockDataset('../', img_test_path, lbl_test_path, test_transform)
 
+    # Define PyTorch data loaders
     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, collate_fn=utils.collate_fn)
     data_loader_test = DataLoader(dataset_test, batch_size=batch_size, shuffle=False, collate_fn=utils.collate_fn)
 
@@ -107,7 +112,6 @@ def objective(trial):
                                                                             LBL_TEST_PATH
                                                                             )
 
-    num_classes = 2
     model = define_mrcnn_model_01(trial, num_classes)
     # Set model to device
     model.to(device)
@@ -127,6 +131,7 @@ def objective(trial):
     # Set model to wrapper object
     mask_model.set_model(model)
 
+    # Calculate IoU
     true_segms, pred_segms = mask_model.calc_cumulative_threshold_matrix(data_loader_test)
     iou_score = evaluator.calc_cumulative_threshold_iou(true_segms, pred_segms)
 
@@ -177,7 +182,6 @@ def avg_f1_objective(trial):
                                                                             LBL_TEST_PATH
                                                                             )
 
-    num_classes = 2
     model = define_mrcnn_model_02(trial, num_classes)
     # Set model to device
     model.to(device)
@@ -199,6 +203,7 @@ def avg_f1_objective(trial):
     dataset_avg_f1_scores = []
     thresh_sweeps = mask_model.get_dataset_thresh_sweeps(dataset_test, 20)
 
+    # Calculate average F1
     for thresh_sweep_pair in thresh_sweeps:
         thresh_sweep = thresh_sweep_pair[0]
         true_label = thresh_sweep_pair[1]
@@ -257,11 +262,11 @@ def avg_recall_objective(trial):
                                                                             LBL_TEST_PATH
                                                                             )
 
-    num_classes = 2
     model = define_mrcnn_model_02(trial, num_classes)
     # Set model to device
     model.to(device)
 
+    # Define optimizer and learning rate
     params = [p for p in model.parameters() if p.requires_grad]
     learning_rate = trial.suggest_categorical("learning_rate", [0.01, 0.001, 0.0001])
     optimizer = torch.optim.Adam(params, lr=learning_rate)
@@ -278,10 +283,11 @@ def avg_recall_objective(trial):
     dataset_avg_recall_scores = []
     thresh_sweeps = mask_model.get_dataset_thresh_sweeps(dataset_test, 20)
 
+    # Calculate average recall
     for thresh_sweep_pair in thresh_sweeps:
         thresh_sweep = thresh_sweep_pair[0]
         true_label = thresh_sweep_pair[1]
-        avg_recall,_ = evaluator.calc_min_iou_avg_recall(true_label, thresh_sweep, min_iou=0.3)
+        avg_recall, recall_scores = evaluator.calc_min_iou_avg_recall(true_label, thresh_sweep, min_iou=0.3)
         dataset_avg_recall_scores.append(avg_recall)
 
     dataset_avg_recall = 0
