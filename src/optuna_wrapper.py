@@ -42,10 +42,14 @@ class OptunaWrapper():
         self.sampler = optuna.samplers.TPESampler()  # uses Bayesian optimization
         self.optimized = False
 
+        # Can also use a pruner for early stopping
+        # self.pruner = optuna.pruners.HyperbandPruner(reduction_factor=4)
+
         # Create hyperparameter tuning "study" session
-        # Use "maximize" direction for metrics like accuracy, precision, or recall; "minimize" for loss
+        # Use "maximize" direction for metrics like accuracy, precision, or recall
         if optim_metric in OptunaWrapper.MAXIMAL_METRICS:
             self.study = optuna.create_study(direction="maximize", sampler=self.sampler)
+        # Use "minimize" direction for metrics like loss
         elif optim_metric in OptunaWrapper.MINIMAL_METRICS:
             self.study = optuna.create_study(direction="minimize", sampler=self.sampler)
         else:
