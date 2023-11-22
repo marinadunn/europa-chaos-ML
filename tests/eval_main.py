@@ -1,4 +1,4 @@
-from test_objs.test_cumulative_eval import TestCumulativeEvaluator
+from tests.test_cumulative_eval import TestCumulativeEvaluator
 
 if __name__ == "__main__":
 
