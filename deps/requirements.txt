@@ -24,7 +24,7 @@ optuna==3.3.0
 packaging==23.1
 pandas==2.0.3
 pickleshare==0.7.5
-Pillow==10.0.0
+Pillow==10.0.1
 psutil==5.9.5
 pycocotools==2.0.6
 Pygments==2.16.1
