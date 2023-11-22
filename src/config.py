@@ -7,7 +7,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 
 # 2 classification classes: background and Plate
 num_classes = 2
-class_names = ['__background__', 'Plate']
+class_names = ['__background__', 'Ice Block']
 
 # Resnet50 Backbone Training variables
 weights = "DEFAULT"  # same as COCO_V1
