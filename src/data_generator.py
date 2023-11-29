@@ -99,7 +99,7 @@ class DataGenerator():
                 stride,
                 min_sheet_area)
 
-        print("Finished!")
+        print("Finished generating data!")
 
     def pruned_sliding_crops_experiment(self,
                                         train_regions,
