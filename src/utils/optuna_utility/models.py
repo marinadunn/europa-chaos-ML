@@ -18,8 +18,15 @@ def define_mrcnn_model_01(trial, num_classes):
     Returns:
         torchvision.models.detection.maskrcnn_resnet50_fpn: Modified Mask R-CNN model.
     """
-    # load Mask R-CNN model with ResNet50 version 1 backbone
-    model = maskrcnn_resnet50_fpn(pretrained = True)
+    # load Mask R-CNN model with ResNet50 backbone
+    model_type = trial.suggest_categorical('model_type', ["v1", "v2"])
+    # model = maskrcnn_resnet50_fpn(pretrained = True)
+
+    # Define Mask R-CNN model version
+    if model_type == "v1":
+        model = maskrcnn_resnet50_fpn(pretrained=True, trainable_backbone_layers=trainable_backbone)
+    elif model_type == "v2":
+        model = maskrcnn_resnet50_fpn_v2(pretrained=True, trainable_backbone_layers=trainable_backbone)
 
     # Get number of input features for bbox classifier
     in_features = model.roi_heads.box_predictor.cls_score.in_features
