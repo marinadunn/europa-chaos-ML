@@ -235,6 +235,29 @@ class MaskRCNNOutputEvaluator():
         avg_f1 = sum(f1_scores) / len(f1_scores)
         return avg_f1, f1_scores
 
+    def calc_min_iou_avg_precision(self, true, threshold_sweep, min_iou=0.5):
+        """
+        Calculate the average precision over a range of thresholds.
+
+        Args:
+            true (numpy.ndarray): Ground truth
+            threshold_sweep (list): List of predicted outputs for different thresholds
+            min_iou (float): Minimum IoU threshold
+
+        Returns:
+            avg_precision (float): Average precision
+            precision_scores (list): Precision scores for each threshold
+        """
+        if len(threshold_sweep) < 2:
+            raise ValueError("Not enough threshold output. Need 2 or more")
+
+        precision_scores = [self.calc_min_iou_precision(true, pred, min_iou=min_iou) for pred in threshold_sweep]
+
+        # Average precision
+        avg_precision = sum(precision_scores) / len(precision_scores)
+
+        return avg_precision, precision_scores
+
     def calc_min_iou_avg_recall(self, true, threshold_sweep, min_iou=0.5):
         """
         Calculate the average recall over a range of thresholds.
@@ -311,6 +334,7 @@ class MaskRCNNOutputEvaluator():
         # Calculate precision and recall
         precision = self.calc_min_iou_precision(true, pred, min_iou=min_iou)
         recall = self.calc_min_iou_recall(true, pred, min_iou=min_iou)
+
         # Calculate F1 score
         f1 = 0
         if (recall + precision) > 0:
