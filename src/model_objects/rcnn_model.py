@@ -55,7 +55,7 @@ class MaskRCNN(AbstractMaskRCNN):
         header = f"chaos_region,crop_size,crop_size,f1,precision,recall,best_threshold\n"
         create_output_csv(csv_path, header)
 
-    def calc_and_save_region_metrics(self, region_alias, crop_size, min_iou=0.3):
+    def calc_and_save_region_metrics(self, region_alias, crop_size, min_iou=0.5):
         """
         Calculate and save metrics for a specific region. Gets the best threshold score
         for entire region, then calculates metrics. Metrics include F1 score,
@@ -102,7 +102,7 @@ class MaskRCNN(AbstractMaskRCNN):
         obs = f"{region_alias},{crop_size},{crop_size},{avg_f1:.4f},{avg_prec:.4f},{avg_rec:.4f},{best_threshold:.4f},{min_iou:.4f}"
         append_input_to_file(self.csv_path, obs)
 
-    def get_best_f1_chaos_region_threshold(self, imgs, lbls, min_iou=0.3):
+    def get_best_f1_chaos_region_threshold(self, imgs, lbls, min_iou=0.5):
         """
         Calculates the best threshold for F1 score for a chaos region by
         iterating over a range of thresholds and calculating the F1 score
@@ -118,7 +118,7 @@ class MaskRCNN(AbstractMaskRCNN):
         """
         # Initialize evaluator and threshold range
         eval_obj = MaskRCNNOutputEvaluator()
-        threshes = np.linspace(0.5, 1.0, 50)
+        threshes = np.linspace(min_iou, 1.0, 50)
         best_threshold, best_avg_f1 = 0, 0
 
         # Get best threshold
