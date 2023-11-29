@@ -1,5 +1,13 @@
 import optuna
+# uses matplotlib backend rather than plotly
+from optuna.visualization.matplotlib import (plot_optimization_history,
+                                             plot_parallel_coordinate,
+                                             plot_param_importances
+                                             )
+import numpy as np
+import matplotlib.pyplot as plt
 import sys
+
 from utils.file_utils import make_dir, append_input_to_file, clear_file
 from config import OPTUNA_OUTPUT_PATH
 
@@ -97,11 +105,6 @@ class OptunaWrapper():
     def plot_search(self):
         """Plot the optimization process."""
         if self.optimized:
-            # Plot intermediate values of all trials in a study
-            plot_intermediate_values(self.study)
-            plt.tight_layout()
-            plt.savefig(f"{OPTUNA_OUTPUT_PATH}/intermediate_values.png",
-                        bbox_inches='tight', dpi=300)
 
             # Plot optimization history of all trials in a study
             plot_optimization_history(self.study)
