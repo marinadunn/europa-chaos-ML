@@ -30,7 +30,7 @@ class AbstractMaskRCNN():
                            arch_id,
                            num_classes,
                            trainable_layers=3,
-                           type="v1",
+                           type="v2",
                            dropout_factor=0.1,
                            model_path=""
                            ):
@@ -86,7 +86,7 @@ class AbstractMaskRCNN():
                      arch_id,
                      num_classes,
                      trainable_layers=3,
-                     type="v1",
+                     type="v2",
                      dropout_factor=0.1):
         """
         Define the model architecture, replace its box and mask predictor heads, and return the model.
@@ -106,10 +106,12 @@ class AbstractMaskRCNN():
         if arch_id == 1:
             model = torchvision.models.detection.maskrcnn_resnet50_fpn(
                 pretrained=True,
+                weights="DEFAULT",
                 trainable_backbone_layers=trainable_layers)
         elif arch_id == 2:
             model = torchvision.models.detection.maskrcnn_resnet50_fpn_v2(
                 pretrained=True,
+                weights="DEFAULT",
                 trainable_backbone_layers=trainable_layers)
 
        # Replace box predictor head
