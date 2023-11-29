@@ -46,7 +46,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         self.load_and_set_model(self.arch_id,
                                 self.num_classes,
                                 trainable_layers=3,
-                                type="v1",
+                                type="v2",
                                 dropout_factor=0.2
                                 )
 
@@ -68,6 +68,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
 
         dataset = EuropaIceBlockDataset('./', IMG_TRAIN_PATH, LBL_TRAIN_PATH,
                                         get_transform(train=True))
+
         # default batch size is 1
         data_loader = torch.utils.data.DataLoader(dataset,
                                                   shuffle=False,
@@ -92,7 +93,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         self.load_and_set_model(self.arch_id,
                                 self.num_classes,
                                 trainable_layers=3,
-                                type="v1",
+                                type="v2",
                                 dropout_factor=0.2
                                 )
 
@@ -100,7 +101,9 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         stride = 64
 
         data_gen_params = {
-            "train_regions": ["A", "B", "C", "Co", "D", "F", "G", "H", "I"],
+            "train_regions": ["A", "aa", "B", "bb", "C", "Co",
+                              "D", "dd", "E", "ee", "F", "ff",
+                              "G", "gg", "H", "I", "jj", "kk"],
             "test_regions": ["hh", "ii"],
             "crop_size": crop_size,
             "stride": stride,
@@ -116,6 +119,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         )
 
         dataset = EuropaIceBlockDataset('./', IMG_TRAIN_PATH, LBL_TRAIN_PATH, get_transform(train=True))
+
         data_loader = torch.utils.data.DataLoader(dataset,
                                                   batch_size=1,
                                                   shuffle=False,
