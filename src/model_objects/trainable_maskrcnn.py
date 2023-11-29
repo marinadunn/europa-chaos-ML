@@ -3,10 +3,11 @@ import torch
 from data_generator import DataGenerator
 from model_objects.abstract_maskrcnn import AbstractMaskRCNN
 from dataset import EuropaIceBlockDataset
-from config import (IMG_TEST_PATH, IMG_TRAIN_PATH,
-                        LBL_TEST_PATH, LBL_TRAIN_PATH,
-                        TRANSFER_TRAINED_MODEL_FOLDER
-                        )
+from config import (IMG_TEST_PATH,
+                    IMG_TRAIN_PATH,
+                    LBL_TEST_PATH, LBL_TRAIN_PATH,
+                    TRANSFER_TRAINED_MODEL_FOLDER,
+                    device)
 from utils.custom import get_transform
 import utils.utils as utils
 from utils.engine import train_one_epoch
@@ -45,10 +46,9 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         self.load_and_set_model(self.arch_id,
                                 self.num_classes,
                                 trainable_layers=3,
-                                type="v2",
+                                type="v1",
                                 dropout_factor=0.2
                                 )
-
 
         data_gen_params = {
             "train_regions": train_regions,
@@ -79,7 +79,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         optimizer = torch.optim.Adam(params, lr=learning_rate)
 
         for epoch in range(num_epochs):
-            train_one_epoch(self.model, optimizer, data_loader, self.device, epoch, print_freq=100)
+            train_one_epoch(self.model, optimizer, data_loader, epoch, print_freq=100, device=device)
 
     # Mimics the structure of objective with the exact values suggested by optuna
     def train_model(self, num_epochs):
@@ -92,7 +92,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         self.load_and_set_model(self.arch_id,
                                 self.num_classes,
                                 trainable_layers=3,
-                                type="v2",
+                                type="v1",
                                 dropout_factor=0.2
                                 )
 
@@ -127,7 +127,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         optimizer = torch.optim.Adam(params, lr=learning_rate)
 
         for epoch in range(num_epochs):
-            train_one_epoch(self.model, optimizer, data_loader, self.device, epoch, print_freq=100)
+            train_one_epoch(self.model, optimizer, data_loader, epoch, print_freq=100, device=device)
 
     def save_model(self):
         """
