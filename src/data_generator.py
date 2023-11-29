@@ -350,7 +350,6 @@ class DataGenerator():
         # Load images and labels
         img = np.array(Image.open(CHAOS_REGION_ALIAS_TO_FILE_MAP[region_alias]))[:, :, 0]
         lbl = np.array(Image.open(CHAOS_REGION_ALIAS_TO_LABEL_MAP[region_alias]))[:, :, :3]
-        print("Images and labels loaded.")
 
         # Get extent of region
         region_lbl = np.array(Image.open(CHAOS_REGION_ALIAS_TO_REGION_MAP[region_alias]))
