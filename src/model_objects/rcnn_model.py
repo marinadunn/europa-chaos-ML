@@ -371,17 +371,17 @@ class MaskRCNN(AbstractMaskRCNN):
         y_start = ymin - stride
 
         # Calculate logit distribution sweep
-        img_logit_dist, img_count_dist = self.calculate_logit_distribution_sweep(y_start,
-                                                                                 img,
-                                                                                 crop_size,
-                                                                                 stride,
-                                                                                 region_crop,
-                                                                                 x_iters,
-                                                                                 y_iters
-                                                                                 )
+        img_logit_dist, img_count_dist = self.calc_logit_distribution_sweep(y_start,
+                                                                            img,
+                                                                            crop_size,
+                                                                            stride,
+                                                                            region_crop,
+                                                                            x_iters,
+                                                                            y_iters
+                                                                            )
 
         # Normalize
-        rescaled_logit_dist = self.calculate_and_normalize_logit_distribution(img_logit_dist, img_count_dist)
+        rescaled_logit_dist = cv2.normalize(img_logit_dist, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
 
         # Create heatmap overlay and save
         heatmap = self.create_heatmap_overlay(img_sweep, rescaled_logit_dist)
@@ -422,24 +422,24 @@ class MaskRCNN(AbstractMaskRCNN):
 
         # Calculate logit distribution sweep
         y_start = ymin - stride
-        img_logit_dist, img_count_dist = self.calculate_logit_distribution_sweep(y_start,
-                                                                                 img,
-                                                                                 crop_size,
-                                                                                 stride,
-                                                                                 region_crop,
-                                                                                 x_iters,
-                                                                                 y_iters
-                                                                                 )
+        img_logit_dist, img_count_dist = self.calc_logit_distribution_sweep(y_start,
+                                                                            img,
+                                                                            crop_size,
+                                                                            stride,
+                                                                            region_crop,
+                                                                            x_iters,
+                                                                            y_iters
+                                                                            )
         # Normalize
         rescaled_logit_dist = cv2.normalize(img_logit_dist, None, 0.0, 1.0, cv2.NORM_MINMAX)
 
         return rescaled_logit_dist
 
     def generate_rescaled_chaos_region_prob_scan(self,
-                                                    region_alias,
-                                                    crop_size,
-                                                    file_name="logit_dist_scan"
-                                                    ):
+                                                region_alias,
+                                                crop_size,
+                                                file_name="logit_dist_scan"
+                                                ):
         """
         Generate a rescaled chaos region probability scan and save the result.
 
@@ -469,14 +469,14 @@ class MaskRCNN(AbstractMaskRCNN):
 
         # Calculate logit distribution sweep
         y_start = ymin - stride
-        img_logit_dist, img_count_dist = self.calculate_logit_distribution_sweep(y_start,
-                                                                                 img,
-                                                                                 crop_size,
-                                                                                 stride,
-                                                                                 region_crop,
-                                                                                 x_iters,
-                                                                                 y_iters
-                                                                                 )
+        img_logit_dist, img_count_dist = self.calc_logit_distribution_sweep(y_start,
+                                                                            img,
+                                                                            crop_size,
+                                                                            stride,
+                                                                            region_crop,
+                                                                            x_iters,
+                                                                            y_iters
+                                                                            )
 
         # Normalize
         rescaled_logit_dist = cv2.normalize(img_logit_dist, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
@@ -520,14 +520,14 @@ class MaskRCNN(AbstractMaskRCNN):
 
         # Calculate logit distribution sweep
         y_start = ymin - stride
-        img_logit_dist, img_count_dist = self.calculate_logit_distribution_sweep(y_start,
-                                                                                 img,
-                                                                                 crop_size,
-                                                                                 stride,
-                                                                                 region_crop,
-                                                                                 x_iters,
-                                                                                 y_iters
-                                                                                 )
+        img_logit_dist, img_count_dist = self.calc_logit_distribution_sweep(y_start,
+                                                                            img,
+                                                                            crop_size,
+                                                                            stride,
+                                                                            region_crop,
+                                                                            x_iters,
+                                                                            y_iters
+                                                                            )
 
         # Normalize and threshold
         rescaled_logit_dist = cv2.normalize(img_logit_dist, None, 0, 255, cv2.NORM_MINMAX)
