@@ -1,9 +1,9 @@
 import torch
 
-from src.data_generator import DataGenerator
-from src.model_objects.abstract_maskrcnn import AbstractMaskRCNN
-from src.dataset import EuropaIceBlockDataset
-from src.config import (IMG_TEST_PATH, IMG_TRAIN_PATH,
+from data_generator import DataGenerator
+from model_objects.abstract_maskrcnn import AbstractMaskRCNN
+from dataset import EuropaIceBlockDataset
+from config import (IMG_TEST_PATH, IMG_TRAIN_PATH,
                         LBL_TEST_PATH, LBL_TRAIN_PATH,
                         TRANSFER_TRAINED_MODEL_FOLDER
                         )
@@ -30,7 +30,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
                                   train_regions,
                                   test_regions,
                                   stride=64,
-                                  crop_size=256
+                                  crop_size=250
                                   ):
         """
         Train the model with specific regions using sliding window approach.
@@ -55,7 +55,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
             "test_regions": test_regions,
             "crop_size": crop_size,
             "stride": stride,
-            "min_sheet_area": 200
+            "min_sheet_area": 50
         }
 
         self.data_gen.pruned_sliding_crops_experiment(
@@ -89,18 +89,22 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
         Args:
             num_epochs (int): Number of training epochs.
         """
-        self.load_and_set_model(self.arch_id, self.num_classes, trainable_layers=3,
-                                type="v2", dropout_factor=0.2)
+        self.load_and_set_model(self.arch_id,
+                                self.num_classes,
+                                trainable_layers=3,
+                                type="v2",
+                                dropout_factor=0.2
+                                )
 
-        crop_size = 384
-        stride = 16
+        crop_size = 250
+        stride = 64
 
         data_gen_params = {
             "train_regions": ["A", "B", "C", "Co", "D", "F", "G", "H", "I"],
             "test_regions": ["hh", "ii"],
             "crop_size": crop_size,
             "stride": stride,
-            "min_sheet_area": 200
+            "min_sheet_area": 50
         }
 
         self.data_gen.pruned_sliding_crops_experiment(
@@ -113,7 +117,7 @@ class TrainableMaskRCNN(AbstractMaskRCNN):
 
         dataset = EuropaIceBlockDataset('./', IMG_TRAIN_PATH, LBL_TRAIN_PATH, get_transform(train=True))
         data_loader = torch.utils.data.DataLoader(dataset,
-                                                  batch_size=2,
+                                                  batch_size=1,
                                                   shuffle=False,
                                                   collate_fn=utils.collate_fn
                                                   )
