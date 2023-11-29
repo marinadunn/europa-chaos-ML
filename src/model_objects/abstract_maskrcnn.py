@@ -30,7 +30,7 @@ class AbstractMaskRCNN():
                            arch_id,
                            num_classes,
                            trainable_layers=3,
-                           type="v2",
+                           type="v1",
                            dropout_factor=0.1,
                            model_path=""
                            ):
@@ -86,7 +86,7 @@ class AbstractMaskRCNN():
                      arch_id,
                      num_classes,
                      trainable_layers=3,
-                     type="v2",
+                     type="v1",
                      dropout_factor=0.1):
         """
         Define the model architecture, replace its box and mask predictor heads, and return the model.
