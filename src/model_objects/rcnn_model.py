@@ -94,9 +94,9 @@ class MaskRCNN(AbstractMaskRCNN):
             recall_scores.append(eval_obj.calc_min_iou_recall(lbl, pred, min_iou=min_iou))
 
         # Calculate average metrics
-        avg_f1 = sum(f1_scores)/len(f1_scores)
-        avg_prec = sum(precision_scores)/len(precision_scores)
-        avg_rec = sum(recall_scores)/len(recall_scores)
+        avg_f1 = sum(f1_scores) / len(f1_scores)
+        avg_prec = sum(precision_scores) / len(precision_scores)
+        avg_rec = sum(recall_scores) / len(recall_scores)
 
         # Save metrics to CSV
         obs = f"{region_alias},{crop_size},{crop_size},{avg_f1:.4f},{avg_prec:.4f},{avg_rec:.4f},{best_threshold:.4f},{min_iou:.4f}"
