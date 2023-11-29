@@ -46,7 +46,7 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [1, 2, 4, 8])  # Default is 8, but can produce memory errors
     min_sheet_area = trial.suggest_categorical("min_sheet_area", [4, 8, 25, 50])
     learning_rate = trial.suggest_float("learning_rate", 1e-6, 0.01, log=True)
-    num_epochs = trial.suggest_int('num_epochs', 1, 200, log=True)
+    num_epochs = trial.suggest_int('num_epochs', 50, 200, step=50)
     opt = trial.suggest_categorical("optimizer", ["SGD", "Adam"])
 
     data_gen_params = {
@@ -135,7 +135,7 @@ def avg_f1_objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [1, 2, 4, 8])  # Default is 8, but can produce memory errors
     min_sheet_area = trial.suggest_categorical("min_sheet_area", [4, 8, 25, 50])
     learning_rate = trial.suggest_float("learning_rate", 1e-6, 0.01, log=True)
-    num_epochs = trial.suggest_int('num_epochs', 1, 200, log=True)
+    num_epochs = trial.suggest_int('num_epochs', 50, 200, step=50)
     opt = trial.suggest_categorical("optimizer", ["SGD", "Adam"])
 
     data_gen_params = {
@@ -227,7 +227,7 @@ def avg_recall_objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [1, 2, 4, 8])  # Default is 8, but can produce memory errors
     min_sheet_area = trial.suggest_categorical("min_sheet_area", [4, 8, 25, 50])
     learning_rate = trial.suggest_float("learning_rate", 1e-6, 0.01, log=True)
-    num_epochs = trial.suggest_int('num_epochs', 1, 200, log=True)
+    num_epochs = trial.suggest_int('num_epochs', 50, 200, step=50)
     opt = trial.suggest_categorical("optimizer", ["SGD", "Adam"])
 
     data_gen_params = {
@@ -318,7 +318,7 @@ def avg_precision_objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [1, 2, 4, 8])  # Default is 8, but can produce memory errors
     min_sheet_area = trial.suggest_categorical("min_sheet_area", [4, 8, 25, 50])
     learning_rate = trial.suggest_float("learning_rate", 1e-6, 0.01, log=True)
-    num_epochs = trial.suggest_int('num_epochs', 1, 200, log=True)
+    num_epochs = trial.suggest_int('num_epochs', 50, 200, step=50)
     opt = trial.suggest_categorical("optimizer", ["SGD", "Adam"])
 
     data_gen_params = {
