@@ -81,7 +81,7 @@ class MaskRCNNCumulativeOutputEvaluator():
 
         return best_thresh
 
-    def get_best_thresh_f1(self, true, pred_logit_dist, **kwargs):
+    def get_best_thresh_f1(self, true, pred_logit_dist):
         """
         Find the best threshold based on F1 score.
 
@@ -93,9 +93,9 @@ class MaskRCNNCumulativeOutputEvaluator():
         Returns:
             float: Best threshold
         """
-        return self.get_best_threshold(true, pred_logit_dist, self.calc_f1_score, **kwargs)
+        return self.get_best_threshold(true, pred_logit_dist, self.calc_f1_score, thresh_count, thresh_min, thresh_max)
 
-    def get_best_thresh_precision(self, true, pred_logit_dist, **kwargs):
+    def get_best_thresh_precision(self, true, pred_logit_dist):
         """
         Find the best threshold based on precision.
 
@@ -107,7 +107,7 @@ class MaskRCNNCumulativeOutputEvaluator():
         Returns:
             float: Best threshold
         """
-        return self.get_best_threshold(true, pred_logit_dist, self.calc_precision, **kwargs)
+        return self.get_best_threshold(true, pred_logit_dist, self.calc_precision, thresh_count, thresh_min, thresh_max)
 
     def calc_pixel_auc(self, true, pred_logit_dist, **kwargs):
         """
