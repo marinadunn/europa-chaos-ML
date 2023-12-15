@@ -120,22 +120,11 @@ python3 -m ipykernel install --user --name [envname]
 To run a hyperparameter search with optuna, run the following commands in a terminal to execute the Python script with the desired options:
 ```
 cd src
-python3 optuna_main.py [options]
+python3 optuna_main.py [metric option]
 ```
 
 Options include:
 - `--metric` (str): Which metric to use for optuna hyperparameter optimization. Options currently include f1, precision, or recall. (Required)
-- `--trials` (int): Number of optuna trials to run. Larger values will result in longer model training. Default is 10. (Optional)
-- `--num_epochs` (int): Number of epochs to run. Larger values will result in longer model training. Default is 15. (Optional)
-- `--crop_size` (list): A list of integer uniform crop sizes (in pixels) for training images. Can be one or multiple. Default is [250], resulting in 250x250 windows. (Optional)
-- `--stride` (list): A list of integer stride sizes for training images. Can be one or multiple. Default is [64]. (Optional)
-- `--batch_size` (list): A list of integer batch size values to use during model training. Can be one or multiple. Default is [1]. (Optional)
-- `--optimizer` (str): An optimizer from the torch.optim package to use during model training. Default is `Adam`. (Optional. Choices: ["SGD", "Adam", "AdamW", "Adagrad", "RMSprop"])
-- `--learning_rate` (list): A list of learning rate float values to use during model training. Can be one or multiple. Default is [0.001]. 0.001 is the default value for Mask R-CNN with the SGD optimizer. (Optional)
-- `--momentum` (list): A list of momentum float values to use during model training for SGD or RMSprop optimizers. Can be one or multiple. Default is [0]. 0 is the default value for Mask R-CNN with the SGD optimizer. (Optional)
-- `--weight_decay` (list): A list of weight decay float values for optimizers. Can be one or multiple. Default is [0]. (Optional)
-- `--beta1` (list): Beta1 for Adam/AdamW optimizers. Default is [0.9]. (Optional)
-- `--beta2` (list): Beta2 for Adam/AdamW optimizers. Default is [0.999]. (Optional)
 
 4. Train and Evaluate the Model
 TBD
