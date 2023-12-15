@@ -17,7 +17,6 @@ from utils.optuna_utility.evaluation import MaskRCNNCumulativeOutputEvaluator
 from utils.file_utils import make_dir, clear_and_remake_directory, append_input_to_file, create_output_csv
 
 # Create output directories and files
-#clear_and_remake_directory(CV_OUTPUT_PATH)
 csv_path = f"{CV_OUTPUT_PATH}/pixel_metrics.csv"
 header = f"chaos_region,crop_size,f1,precision,recall,best_threshold\n"
 create_output_csv(csv_path, header)
@@ -87,9 +86,15 @@ def test_output(model_obj, region):
 
     # Extract region of interest
     region_activation = np.where(region_lbl)
-    base_crop = crop_image(base_img, region_activation, region_expand)
-    raw_label_crop = crop_image(raw_label, region_activation, region_expand)
-    region_crop = crop_image(region_lbl, region_activation, region_expand)[:, :, 0].copy()
+    region_expand = 64
+    x_min = np.min(region_activation[1]) - region_expand
+    x_max = np.max(region_activation[1]) + region_expand
+    y_min = np.min(region_activation[0]) - region_expand
+    y_max = np.max(region_activation[0]) + region_expand
+
+    base_crop = base_img[y_min:y_max, x_min:x_max].copy()
+    raw_label_crop = raw_label[y_min:y_max,x_min:x_max, :].copy()
+    region_crop = region_lbl[y_min:y_max, x_min:x_max, 0].copy()
 
     # Preprocess labels
     lbl_crop = np.sum(raw_label_crop, axis=2)
