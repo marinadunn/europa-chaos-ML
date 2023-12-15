@@ -117,6 +117,7 @@ python3 -m ipykernel install --user --name [envname]
 ```
 
 3. (Optional) Perform Hyperparameter Search with Optuna
+
 To run a hyperparameter search with optuna, run the following commands in a terminal to execute the Python script with the desired options:
 ```
 cd src
@@ -126,8 +127,13 @@ python3 optuna_main.py [metric option]
 Options include:
 - `--metric` (str): Which metric to use for optuna hyperparameter optimization. Options currently include f1, precision, or recall. (Required)
 
-4. Train and Evaluate the Model
-TBD
+4. Running Leave-One-Out Cross-Validation (LOOCV)
+
+To perform the same LOOCV experiment setup currently described in our paper/poster, run the following commands in a terminal to execute the Python script:
+```
+cd src
+python3 cross_val.py
+```
 
 ## Authors
 
