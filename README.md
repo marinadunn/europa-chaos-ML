@@ -6,6 +6,10 @@ Automated instance segmentation for ice blocks within Europa's chaos terrain usi
 
 The project utilizes imaging data from regional image mosaic maps ("RegMaps") produced by NASA's Galileo Solid State Imager (SSI) and photogrammetrically corrected by the [USGS Astrogeology Science Center](https://astrogeology.usgs.gov/search/map/Europa/Mosaic/Equirectangular_Mosaics_of_Europa_v3) as part of [Bland et al. 2021](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2021EA001935).
 
+The labels used for model training are created by Alyssa C. Mills and are available publicly on [Zenodo](https://zenodo.org/records/10162452).
+
+The data for each chaos region can be found in the `data` directory. Smaller image and mask tiles generated as part of the hyperparameter search process are stored in a new directory `processed_data`, and are sorted into training and testing subsets (`img_train`, `img_test`, `lbl_train`, `lbl_test`).
+
 | Region | Mosaic ID | Resolution (m/pixel) | Leading/Trailing Hemisphere|
 |--------|----------|----------|----------|
 |   A    | 15ESREGMAP02                                 | 229     | Leading |
@@ -28,8 +32,6 @@ The project utilizes imaging data from regional image mosaic maps ("RegMaps") pr
 |   ii   | 17ESNERTRM01                                 | 210     | Trailing |
 |   jj   | 17ESNERTRM01                                 | 210     | Trailing |
 |   kk   | 17ESNERTRM01                                 | 210     | Trailing |
-
-The data for each chaos region can be found in the `data` directory. Smaller image and mask tiles generated as part of the hyperparameter search process are stored in a new directory `processed_data`, and are sorted into training and testing subsets (`img_train`, `img_test`, `lbl_train`, `lbl_test`).
 
 ## Model
 
@@ -147,4 +149,4 @@ python3 cross_val.py
 - Conor A. Nixon (<conor.a.nixon@nasa.gov>)
 
 ## References
-If you use this code, please cite our [NeurIPS paper](https://ml4physicalsciences.github.io/2023/files/NeurIPS_ML4PS_2023_156.pdf)
+If you use this code, please cite our [NeurIPS paper](https://ml4physicalsciences.github.io/2023/files/NeurIPS_ML4PS_2023_156.pdf).
