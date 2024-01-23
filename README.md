@@ -151,4 +151,4 @@ python3 cross_val.py
 We would like to thank Dr. Catherine C. Walker (Woods Hole Oceanographic Institution Department of Applied Ocean Physics and Engineering) and Dr. Rafael Augusto Pires de Lima (Department of Geography, University of Colorado, Boulder) for contributing their valuable Earth science-related expertise. We also thank Dr. Erin Leonard and Alyssa C. Mills for sharing chaos terrain labels used for model training, and Douglas M. Trent and David Na (NASA Headquarters) for providing the computing resources and data science support throughout this project. This material is based upon work supported by NASA under award number 80GSFC21M0002.
 
 ## References
-If you use this code, please cite our [NeurIPS paper](https://ml4physicalsciences.github.io/2023/files/NeurIPS_ML4PS_2023_156.pdf).
+If you use this code, please cite our [NeurIPS ML4PS Workshop paper](https://ml4physicalsciences.github.io/2023/files/NeurIPS_ML4PS_2023_156.pdf). [NeurIPS ML4PS Workshop Poster](https://neurips.cc/media/PosterPDFs/NeurIPS%202023/76196.png).
