@@ -138,6 +138,10 @@ cd src
 python3 cross_val.py
 ```
 
+## Archived Code
+
+Prior notebooks that were created during the development process, but are no longer being used, are located in the `archive` directory. This includes model development code for non-georeferenced labels, created with the ['LabelMe'](https://github.com/labelmeai/labelme/tree/main) tool.
+
 ## Authors
 
 - **Marina M. Dunn (<marina.dunn@email.ucr.edu>)**
@@ -150,6 +154,7 @@ python3 cross_val.py
 - Conor A. Nixon (<conor.a.nixon@nasa.gov>)
 
 ## Acknowledgements
+
 We would like to thank Dr. Catherine C. Walker (Woods Hole Oceanographic Institution Department of Applied Ocean Physics and Engineering) and Dr. Rafael Augusto Pires de Lima (Department of Geography, University of Colorado, Boulder) for contributing their valuable Earth science-related expertise. We also thank Dr. Erin Leonard and Alyssa C. Mills for sharing chaos terrain labels used for model training, and Douglas M. Trent and David Na (NASA Headquarters) for providing the computing resources and data science support throughout this project. This material is based upon work supported by NASA under award number 80GSFC21M0002.
 
 ## References
