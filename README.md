@@ -70,6 +70,7 @@ Current branch: `main`
 Project Repository Structure:
 ```
 europa-chaos-ML/
+├── archive
 ├── data
 │   ├── Chaos_[X]/
 │       ├── image/
