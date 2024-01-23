@@ -1,12 +1,10 @@
 # Detection and Segmentation of Ice Blocks in Europa's Chaos Terrain Using Mask R-CNN
 
-Automated instance segmentation for ice blocks within Europa's chaos terrain using corrected NASA Galileo images.
+Instance segmentation for ice blocks within Europa's chaos terrain using corrected NASA Galileo images.
 
 ## Data
 
 The project utilizes imaging data from regional image mosaic maps ("RegMaps") produced by NASA's Galileo Solid State Imager (SSI) and photogrammetrically corrected by the [USGS Astrogeology Science Center](https://astrogeology.usgs.gov/search/map/Europa/Mosaic/Equirectangular_Mosaics_of_Europa_v3) as part of [Bland et al. 2021](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2021EA001935).
-
-The labels used for model training are created by Alyssa C. Mills and are available publicly on [Zenodo](https://zenodo.org/records/10162452).
 
 The data for each chaos region can be found in the `data` directory. Smaller image and mask tiles generated as part of the hyperparameter search process are stored in a new directory `processed_data`, and are sorted into training and testing subsets (`img_train`, `img_test`, `lbl_train`, `lbl_test`).
 
@@ -33,15 +31,14 @@ The data for each chaos region can be found in the `data` directory. Smaller ima
 |   jj   | 17ESNERTRM01                                 | 210     | Trailing |
 |   kk   | 17ESNERTRM01                                 | 210     | Trailing |
 
+### Data and Code Availability
+The labels used for model training are created by Alyssa C. Mills and are available publicly on [Zenodo](https://zenodo.org/records/10162452). These labels were created using the same conventions as Leonard et al. 2022, but with corrected USGS imagery.
+
 ## Model
 
 Our current setup leverages a [Mask R-CNN](https://arxiv.org/pdf/1703.06870.pdf) model framework, with a [ResNet50](https://arxiv.org/abs/1512.03385) backbone, and uses pre-trained weights from the [Common Objects in COntext (COCO)](https://cocodataset.org/#home) dataset to perform transfer learning.
 
 Final trained models and their weights can be found in the `models` directory.
-
-## Source Code
-
-All source code can be found in the `src` directory.
 
 ## Examples
 
@@ -129,9 +126,11 @@ python3 optuna_main.py [metric option]
 Options include:
 - `--metric` (str): Which metric to use for optuna hyperparameter optimization. Options currently include f1, precision, or recall. (Required)
 
-4. Running Leave-One-Out Cross-Validation (LOOCV)
+## Usage
 
-To perform the same LOOCV experiment setup currently described in our paper/poster, run the following commands in a terminal to execute the Python script:
+Running Leave-One-Out Cross-Validation (LOOCV):
+
+All source code can be found in the `src` directory. To perform the same LOOCV experiment setup currently described in our paper/poster, run the following commands in a terminal to execute the Python script:
 ```
 cd src
 python3 cross_val.py
@@ -147,6 +146,9 @@ python3 cross_val.py
 - Andrew Larsen (<drewlarsen27@gmail.com>)
 - John Santerre (<john.santerre@gmail.com>)
 - Conor A. Nixon (<conor.a.nixon@nasa.gov>)
+
+## Acknowledgements
+We would like to thank Dr. Catherine C. Walker (Woods Hole Oceanographic Institution Department of Applied Ocean Physics and Engineering) and Dr. Rafael Augusto Pires de Lima (Department of Geography, University of Colorado, Boulder) for contributing their valuable Earth science-related expertise. We also thank Dr. Erin Leonard and Alyssa C. Mills for sharing chaos terrain labels used for model training, and Douglas M. Trent and David Na (NASA Headquarters) for providing the computing resources and data science support throughout this project. This material is based upon work supported by NASA under award number 80GSFC21M0002.
 
 ## References
 If you use this code, please cite our [NeurIPS paper](https://ml4physicalsciences.github.io/2023/files/NeurIPS_ML4PS_2023_156.pdf).
