@@ -1,6 +1,8 @@
 # Detection and Segmentation of Ice Blocks in Europa's Chaos Terrain Using Mask R-CNN
 
-Instance segmentation for ice blocks within Europa's chaos terrain using corrected NASA Galileo images.
+## Objective
+
+This project aims to develop a deep learning model for performing instance segmentation for ice blocks in chaos terrain regions of Europa. The model uses georeferenced labels created from corrected imagery of NASA’s Galileo Solid State Imager (SSI) to train a Mask Region-based Convolutional Neural Network (Mask R-CNN).
 
 ## Data
 
